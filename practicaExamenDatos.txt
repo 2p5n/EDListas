@@ -1,0 +1,301 @@
+******LISTAS ENLAZADAS******
+CLASIFICACION:
+-LISTAS SIMPLEMENTE ENLAZADAS: Los nodos cabeza y cola apuntan a null, cada nodo tiene solo UN enlace al siguiente.
+
+-LISTAS CIRCULAR SIMPLEMENTE ENLAZADAS: La cola.siguiente apunta a la cabeza, cada nodo tiene solo UN enlace al siguiente.
+
+-LISTAS DOBLEMENTE ENLAZADAS: Los nodos cabeza y cola apuntan a null, cada nodo tiene DOS enlaces, al siguiente y al anterior.
+
+-LISTAS CIRCULAR DOBLEMENTE ENLAZADAS: La cabeza.anterior apunta a la cola, y la cola.siguiente apunta a la cabeza, cada nodo tiene DOS enlaces, al siguiente y al anterior.
+
+****METODOS PRINCIPALES (INSERCION - ELIMINACION POR CLAVE - RECORRER Y MOSTRAR)****
+
+================================LISTAS SIMPLEMENTE ENLAZADAS==========================================
+
+**INSERTAR**
+
+    public listaSimple insertar(listaSimple list, int data)
+    {
+        Node nuevo = new Node(data);
+ 
+        if (list.cabeza == null) {
+            list.cabeza = nuevo;
+        }
+        else {
+            // Para ir al final de la lista
+            Node ultimo = list.cabeza;
+            while (ultimo.next != null) {
+                ultimo = ultimo.next;
+            }
+            // Insertar al final de la lista
+            ultimo.next = nuevo;
+        }
+        return list;
+    }
+
+**ELIMINAR**
+
+    public  listaSimple eliminar(listaSimple list,int key)
+    {
+        // Guardar la cabeza
+        Node actual = list.cabeza, previo = null;
+ 
+        // CASO 1:
+        // Cuando el dato esta en la cabeza
+        if (actual != null && actual.data == key) {
+            list.cabeza = actual.next; 
+
+            System.out.println(key + " ENCONTRADO Y ELIMINADO");
+            return list;
+        }
+ 
+        // CASO 2:
+        // Cuando el dato está en otro lugar diferente a la cabeza
+        // Buscar y borrar
+        // Mantener el nodo previo
+
+        while (actual != null && actual.data != key) {
+            previo = actual;
+            actual = actual.next;
+        }
+ 
+        // Si el dato fue encontrado, este debe estar en actual
+        // por tanto el actual no debe ser nulo
+        if (actual != null) {
+
+            // Desligar el actual de la list
+            previo.next = actual.next;
+
+            System.out.println(key + " ENCONTRADO Y ELIMINADO");
+        }
+ 
+        //
+        // CASO 3: El dato no existe en la lista
+        // actual debería ser null
+        if (actual == null) {
+            System.out.println(key + " NO ENCONTRADO");
+        }
+        return list;
+    }        
+}
+
+**MOSTRAR**
+    public void mostrar(listaSimple list)
+    {
+         Node actual = list.cabeza;
+         System.out.print("\nLISTA SIMPLE: ");
+         while (actual != null) {
+            // IMPRIMIR EL ELEMENTO DEL NODO ACTUAL
+            System.out.print(actual.data + " ");
+             // IR AL NODO SIGUIENTE
+            actual = actual.next;
+        }
+        System.out.println("\n");
+    }
+
+=============================LISTAS CIRCULAR SIMPLEMENTE ENLAZADAS================================
+
+**INSERTAR**
+    public void insertar(int data){  
+        Node nuevo = new Node(data);  
+ 
+        if(cabeza == null) {  
+            cabeza = nuevo;  
+            cola = nuevo;  
+            nuevo.next = cabeza;  
+        }  
+        else {  
+            cola.next = nuevo;  
+            cola = nuevo;  
+            cola.next = cabeza;  
+        }  
+    }
+
+**ELIMINAR POR CLAVE**
+    public void eliminarClave(int key){
+        Node actual = cabeza, prev = null;
+ 
+        if (actual != null && actual.data == key) {
+            if (cabeza == cola){
+                cabeza=null;
+                cola=null;
+            }
+            else{
+                cabeza = actual.next; 
+                cola.next=cabeza;
+                actual.next= null;
+            }
+                System.out.println(key + " ENCONTRADO Y ELIMINADO");
+                return;
+        }
+ 
+        while (actual != null && actual.data != key) {
+            prev = actual;
+            actual = actual.next;
+        }
+ 
+        if (actual != null) {
+            // Desligar el currNode de la list
+            prev.next = actual.next;
+            actual.next=null;
+            System.out.println(key + " ENCONTRADO Y EIMINADO");
+            if(actual == cola){
+                cola=prev;
+            }
+        }
+ 
+        if (actual == null) {
+            System.out.println(key + " NO ENCONTRADO");
+        }
+    }        
+}
+
+**MOSTRAR**
+    public void mostrar() {  
+        Node actual = cabeza;  
+        if(cabeza == null) {  
+            System.out.println("LA LISTA ESTA VACIA");  
+        }  
+        else {  
+            System.out.println("LISTA: ");  
+             do{  
+                
+                System.out.print(" "+ actual.data);  
+                actual = actual.next;  
+            }while(actual != cabeza);  
+            System.out.println();  
+        }  
+    }
+
+
+================================LISTAS DOBLEMENTE ENLAZADAS===================================
+
+**INSERTAR**
+    public void ingresarNodo(int dato) {
+        Nodo nodoAux = new Nodo(dato);
+
+        if (cabeza == null) {
+            cabeza = nodoAux;
+            cola = nodoAux;
+        } else {
+
+            cola.siguiente = nodoAux;
+            nodoAux.anterior = cola;
+            cola = nodoAux;
+        }
+    }
+
+**ELIMINAR**
+    public void eliminarNodo(int dato) {
+        Nodo actual = cabeza;
+        while (actual != null) {
+            if (actual.dato == dato) {
+                if (actual == cabeza) {
+                    cabeza = cabeza.siguiente;
+                    if (cabeza != null) {
+                        cabeza.anterior = null;
+                    } else {
+                        cola = null; 
+                    }
+                } else 
+                    if (actual == cola) {
+                    cola = cola.anterior;
+                    if (cola != null) {
+                        cola.siguiente = null;
+                    } else {
+                        cabeza = null; 
+                    }
+                } else {
+                    actual.anterior.siguiente = actual.siguiente;
+                    actual.siguiente.anterior = actual.anterior;
+                }
+                break; 
+            }
+            actual = actual.siguiente;
+        }
+    }
+
+**MOSTRAR**
+    public String recorrerHaciaAdelante() {
+        Nodo actual = cabeza;
+        String cadena="";
+        while (actual != null) {
+            cadena=String.format("%s%d->",cadena,actual.dato);
+            actual = actual.siguiente;
+        }
+        cadena=String.format("%s null",cadena);
+        return cadena;
+    }
+
+============================LISTA CIRCULAR DOBLEMENTE ENLAZADA===================================
+
+**INSERTAR**
+public void insertar(int data) {
+    Node nuevo = new Node(data);
+    
+    if (cabeza == null) {
+        cabeza = nuevo;
+        cola = nuevo;
+        nuevo.next = cabeza;
+        nuevo.prev = cola;
+    } else {
+        cola.next = nuevo;
+        nuevo.prev = cola;
+        nuevo.next = cabeza;
+        cabeza.prev = nuevo;
+        cola = nuevo;
+    }
+}
+
+**ELIMINAR**
+public void eliminarClave(int key) {
+    Node actual = cabeza;
+
+    if (actual != null && actual.data == key) {
+        if (cabeza == cola) {
+            cabeza = null;
+            cola = null;
+        } else {
+            cabeza = actual.next;
+            cola.next = cabeza;
+            cabeza.prev = cola;
+            actual.next = null;
+            actual.prev = null;
+        }
+        System.out.println(key + " ENCONTRADO Y ELIMINADO");
+        return;
+    }
+
+    do {
+        if (actual.data == key) {
+            actual.prev.next = actual.next;
+            actual.next.prev = actual.prev;
+            if (actual == cola) {
+                cola = actual.prev;
+            }
+            actual.next = null;
+            actual.prev = null;
+            System.out.println(key + " ENCONTRADO Y ELIMINADO");
+            return;
+        }
+        actual = actual.next;
+    } while (actual != cabeza);
+
+    System.out.println(key + " NO ENCONTRADO");
+}
+
+**MOSTRAR**
+
+public void mostrar() {
+    Node actual = cabeza;
+    if (cabeza == null) {
+        System.out.println("LA LISTA ESTA VACIA");
+    } else {
+        System.out.println("LISTA: ");
+        do {
+            System.out.print(" " + actual.data);
+            actual = actual.next;
+        } while (actual != cabeza);
+        System.out.println();
+    }
+}
